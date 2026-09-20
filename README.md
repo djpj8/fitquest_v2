@@ -1,245 +1,143 @@
-# ⚔️ FitQuest v2.0 — Guida Deploy su Cloudflare
+# ⚔️ FitQuest v2.0
 
-Architettura:
-- **Cloudflare Pages** → Frontend React (gratis, illimitato)
-- **Cloudflare Workers** → Backend API (gratis, 100k req/giorno)
-- **Cloudflare D1** → Database SQLite (gratis, 5GB)
+**Trasforma ogni allenamento in una quest.**
 
----
-
-## Prerequisiti
-
-- Account Cloudflare gratuito → cloudflare.com
-- Node.js installato
-- Git installato
+FitQuest è una web app fitness gamificata: registri i tuoi workout, guadagni punti esperienza (XP), sali di livello e sblocchi achievement, come in un gioco di ruolo. Pensata per chi si allena in palestra, a corpo libero o in entrambi i modi, e vuole tenere traccia dei progressi con un pizzico di motivazione in più.
 
 ---
 
-## STEP 1 — Crea account Cloudflare
+## ✨ Cosa puoi fare
 
-1. Vai su **cloudflare.com** → "Sign Up"
-2. Inserisci email e password
-3. Verifica l'email
-4. NON serve aggiungere un dominio — il piano gratuito funziona senza
+### 🎮 Progressione stile RPG
+- **XP e livelli**: ogni allenamento completato ti dà esperienza. I livelli richiedono via via più XP (+50% a ogni livello), quindi salire diventa una sfida sempre più soddisfacente.
+- **Classi personaggio**: scegli la tua classe alla registrazione.
+  - ⚔️ **Warrior**: forza e potenza
+  - 🔮 **Mage**: tecnica e disciplina
+  - 🏹 **Ranger**: velocità e resistenza
+- **Achievement**: 9 traguardi da sbloccare, con rarità diversa (comune, raro, epico, leggendario) e bonus XP, dal primo allenamento fino al titolo di *Mythic Legend* al livello 20.
 
----
+### 🏋️ Allenamenti
+- **Log Workout**: registra serie, ripetizioni e pesi per ogni esercizio, con durata e note. Alla fine ricevi un riepilogo "Quest Completata" con l'XP guadagnato.
+- **Libreria di 59 esercizi** già pronta: 26 da palestra e 33 di calisthenics, divisi per gruppo muscolare (petto, schiena, gambe, spalle, braccia, core, cardio). Dal Bench Press al Muscle-Up, fino ai movimenti avanzati come Front Lever e Planche.
+- **Esercizi personalizzati**: aggiungi i tuoi, con i muscoli coinvolti.
+- **Preferiti**: segna gli esercizi che usi di più.
+- **Routine**: crea schede riutilizzabili (es. *Push Day*) e avviale con un clic.
+- **Programmi**: organizza le routine in piani più lunghi (es. *12 Settimane Forza*).
 
-## STEP 2 — Installa Wrangler (tool Cloudflare)
+### 📊 Statistiche e progressi
+- **Dashboard** con riepilogo del tuo profilo, XP settimanali e ultimi allenamenti.
+- **Cronologia** completa di tutti i workout svolti.
+- **Statistiche per esercizio**: grafico della progressione dei carichi nel tempo.
+- **Body Tracker**: registra peso e altezza, calcola il **BMI** e visualizza l'andamento in un grafico.
 
-Apri il terminale e scrivi:
-
-```
-npm install -g wrangler
-```
-
-Poi fai il login:
-
-```
-wrangler login
-```
-
-Si aprirà il browser — autorizza l'accesso. Quando vedi "Successfully logged in" nel terminale sei a posto.
-
----
-
-## STEP 3 — Crea il database D1
-
-```
-wrangler d1 create fitquest-db
-```
-
-Vedrai un output tipo:
-```
-✅ Successfully created DB 'fitquest-db'
-[[d1_databases]]
-binding = "DB"
-database_name = "fitquest-db"
-database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-```
-
-**Copia il `database_id`** — ti serve dopo.
+### 🎨 Personalizzazione
+- **Tema chiaro e scuro**, salvato sul tuo account.
+- Gestione del profilo e possibilità di eliminare l'account con tutti i dati.
 
 ---
 
-## STEP 4 — Configura il Worker
+## ⚡ Come funziona il sistema XP
 
-1. Apri il file `worker/wrangler.toml`
-2. Sostituisci `YOUR_DATABASE_ID_HERE` con il tuo ID copiato sopra
+| Azione | XP |
+|---|---|
+| Completare un allenamento | **20** base |
+| Durata dell'allenamento | **+0,5** per ogni minuto |
+| Ogni serie registrata | **+10** |
+| Sbloccare un achievement | bonus da **50 a 1000** |
 
----
+Il fabbisogno di XP per il livello successivo cresce del 50% a ogni livello, partendo da 100 XP.
 
-## STEP 5 — Crea le tabelle nel database
+### 🏆 Achievement disponibili
 
-Entra nella cartella worker:
-```
-cd worker
-npm install
-```
-
-Poi esegui la migrazione:
-```
-wrangler d1 execute fitquest-db --file=./schema.sql
-```
-
-Dovresti vedere tante righe "ok" — le tabelle sono create con tutti gli esercizi già inseriti.
-
----
-
-## STEP 6 — Deploy del Worker (backend API)
-
-Ancora nella cartella `worker`:
-```
-wrangler deploy
-```
-
-Vedrai il tuo URL del worker, tipo:
-```
-https://fitquest-worker.TUO-NOME.workers.dev
-```
-
-**Salvati questo URL** — ti serve nel prossimo step.
+| Icona | Nome | Obiettivo | Rarità |
+|---|---|---|---|
+| ⚔️ | First Blood | Completa il primo workout | Comune |
+| 🛡️ | Seasoned Warrior | Completa 10 workout | Raro |
+| 👑 | Legendary Champion | Completa 50 workout | Leggendario |
+| ⚡ | Rising Power | Raggiungi il livello 5 | Comune |
+| 🔥 | Elite Warrior | Raggiungi il livello 10 | Raro |
+| 💎 | Mythic Legend | Raggiungi il livello 20 | Leggendario |
+| 🏆 | Iron Will | Allenati 5 volte in una settimana | Epico |
+| 📏 | Body Tracker | Registra la prima misurazione | Comune |
+| 🎯 | Transformation | Registra 10 misurazioni | Raro |
 
 ---
 
-## STEP 7 — Configura il frontend
+## 🛠️ Tecnologie
 
-Apri il file `frontend/vite.config.ts` e aggiorna il proxy con il tuo URL worker:
+Il progetto è interamente costruito sull'ecosistema **Cloudflare**, pensato per funzionare senza costi di hosting.
 
-```ts
-proxy: {
-  '/api': {
-    target: 'https://fitquest-worker.TUO-NOME.workers.dev',
-    changeOrigin: true,
-    rewrite: (path) => path.replace(/^\/api/, '/api')
-  }
-}
-```
-
-**ATTENZIONE**: Per Cloudflare Pages in produzione devi usare un file
-`frontend/public/_redirects` (già incluso) e impostare la variabile
-d'ambiente `VITE_API_URL` nelle impostazioni di Pages.
-
-In alternativa più semplice: modifica `frontend/src/lib/api.ts` e
-cambia la riga:
-```ts
-const BASE = '/api';
-```
-con:
-```ts
-const BASE = 'https://fitquest-worker.TUO-NOME.workers.dev/api';
-```
+| Livello | Tecnologia |
+|---|---|
+| **Frontend** | React 18, TypeScript, Vite |
+| **Stile** | Tailwind CSS con tema personalizzato dark/light |
+| **Dati e cache** | TanStack React Query |
+| **Grafici** | Recharts |
+| **Backend** | Cloudflare Workers (API REST) |
+| **Database** | Cloudflare D1 (SQLite) |
+| **Autenticazione** | Token firmato con Web Crypto |
 
 ---
 
-## STEP 8 — Build del frontend
-
-Entra nella cartella frontend:
-```
-cd ../frontend
-npm install
-npm run build
-```
-
-Verrà creata la cartella `dist/` con il sito compilato.
-
----
-
-## STEP 9 — Deploy su Cloudflare Pages
-
-**Opzione A — Da browser (più semplice):**
-
-1. Vai su **dash.cloudflare.com**
-2. Clicca **"Workers & Pages"** → **"Create"** → **"Pages"**
-3. Clicca **"Upload assets"**
-4. Carica tutta la cartella `frontend/dist/`
-5. Clicca **"Deploy site"**
-
-Il sito sarà live su: `https://fitquest.pages.dev`
-
-**Opzione B — Da terminale:**
+## 🧱 Architettura
 
 ```
-npx wrangler pages deploy dist --project-name=fitquest
+┌──────────────────────┐      ┌──────────────────────┐      ┌──────────────────┐
+│  Frontend (React)    │ ───▶ │  Worker (API REST)   │ ───▶ │  D1 (SQLite)     │
+│  Sito statico        │ ◀─── │  Auth, XP, logica    │ ◀─── │  Utenti, workout │
+└──────────────────────┘      └──────────────────────┘      └──────────────────┘
 ```
 
----
-
-## STEP 10 — Testa il sito
-
-Apri il browser su `https://fitquest.pages.dev` e registrati!
-
----
-
-## Struttura del progetto
+### Struttura del repository
 
 ```
 fitquest-v2/
-├── frontend/               # React + Vite
-│   ├── src/
-│   │   ├── App.tsx
-│   │   ├── main.tsx
-│   │   ├── index.css       # Tema dark/light
-│   │   ├── components/
-│   │   │   └── Sidebar.tsx
-│   │   ├── hooks/
-│   │   │   └── useAuth.ts  # JWT auth
-│   │   ├── lib/
-│   │   │   ├── api.ts
-│   │   │   └── utils.ts
-│   │   └── pages/
-│   │       ├── AuthPage.tsx
-│   │       ├── Dashboard.tsx
-│   │       ├── LogWorkout.tsx
-│   │       ├── Routines.tsx
-│   │       ├── Programs.tsx
-│   │       ├── History.tsx
-│   │       ├── Achievements.tsx
-│   │       ├── BodyTracker.tsx    ← NUOVO v2.0
-│   │       ├── ExerciseStats.tsx  ← NUOVO v2.0
-│   │       └── Profile.tsx
-│   ├── public/
-│   │   └── _redirects
-│   ├── index.html
-│   ├── vite.config.ts
-│   ├── tailwind.config.js
-│   └── package.json
-└── worker/                 # Cloudflare Worker API
-    ├── src/
-    │   └── index.js        # API completa con JWT
-    ├── schema.sql           # DB schema + seed
-    ├── wrangler.toml        # Config (metti il tuo DB ID)
-    └── package.json
+├── frontend/              # App React
+│   └── src/
+│       ├── pages/         # Dashboard, LogWorkout, Routines, Programs,
+│       │                  # History, Achievements, BodyTracker,
+│       │                  # ExerciseStats, Profile, AuthPage
+│       ├── components/    # Sidebar
+│       ├── hooks/         # useAuth
+│       └── lib/           # client API e utility
+└── worker/                # Backend
+    ├── src/index.js       # API REST
+    └── schema.sql         # Schema del database e dati iniziali
 ```
+
+### Modello dati
+
+Il database è composto da 9 tabelle: `users`, `exercises`, `favorite_exercises`, `routines`, `programs`, `workout_logs`, `body_measurements`, `achievements` e `user_achievements`.
+
+### API principali
+
+| Area | Endpoint |
+|---|---|
+| Autenticazione | `/auth/register`, `/auth/login`, `/auth/me`, `/auth/theme`, `/auth/account` |
+| Esercizi | `/exercises`, `/exercises/favorites`, `/exercises/:id/favorite` |
+| Routine | `/routines`, `/routines/:id` |
+| Programmi | `/programs`, `/programs/:id` |
+| Workout | `/workouts`, `/workouts/stats`, `/workouts/exercise-stats` |
+| Misurazioni | `/measurements`, `/measurements/:id` |
+| Achievement | `/achievements` |
 
 ---
 
-## Nuove funzionalità v2.0
+## 🗺️ Idee per il futuro
 
-- 🌙☀️ **Tema scuro/chiaro** — toggle nell'header della sidebar
-- 📏 **Body Tracker** — traccia peso e calcola BMI con grafico
-- 📊 **Statistiche Esercizi** — vedi la progressione dei pesi per ogni esercizio
-- 🔐 **Auth JWT** — token sicuro, niente sessioni server
-
----
-
-## Problemi comuni
-
-**"wrangler: command not found"**
-```
-npm install -g wrangler
-```
-
-**Errore CORS nel browser**
-Nel worker `src/index.js` i CORS sono già configurati con `Access-Control-Allow-Origin: *`
-
-**Il sito carica ma le API non rispondono**
-Controlla che il URL del worker in `api.ts` sia corretto.
-
-**Database vuoto dopo il deploy**
-Riesegui: `wrangler d1 execute fitquest-db --file=./schema.sql`
+- Classifica tra amici e sfide settimanali
+- Streak giornaliere con bonus XP
+- Obiettivi personalizzati (peso, carichi, frequenza)
+- Grafici di volume e records personali
+- Versione installabile come app (PWA)
 
 ---
 
-## Contatti
+## 👤 Autore
 
-Parisi Alessandro — djpj8.09@gmail.com
+**Parisi Alessandro**
+📧 djpj8.09@gmail.com
+
+---
+
+<p align="center">Fatto con ⚔️ e tanta voglia di allenarsi.</p>
