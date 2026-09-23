@@ -1,8 +1,0 @@
-name = "fitquest-worker"
-main = "src/index.js"
-compatibility_date = "2024-01-01"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "fitquest-db"
-database_id = "1849ceeb-1e11-4a1d-baf6-d17dc3108dc2"
