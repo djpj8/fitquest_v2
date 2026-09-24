@@ -1,4 +1,4 @@
-const BASE = 'https://fitquest-worker.fitquest.workers.dev/api';
+const BASE = '/api';
 
 function getToken() {
   return localStorage.getItem('fitquest_token');

@@ -1,0 +1,256 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* ══════════════ TEMA SCURO (predefinito) ══════════════ */
+  :root, [data-theme="dark"] {
+    --background: 220 20% 6%;
+    --foreground: 45 30% 88%;
+    --card: 220 18% 10%;
+    --card-foreground: 45 30% 88%;
+    --card-border: 220 15% 18%;
+    --muted: 220 15% 12%;
+    --muted-foreground: 220 10% 60%;
+    --primary: 43 85% 55%;
+    --primary-foreground: 220 20% 6%;
+    --border: 220 15% 18%;
+    --input: 220 18% 14%;
+    --destructive: 0 70% 55%;
+    --destructive-border: hsl(0, 70%, 35%);
+    --sidebar: 220 22% 8%;
+    --sidebar-border: 220 15% 15%;
+    --sidebar-foreground: 45 30% 88%;
+
+    /* Colori semantici */
+    --xp: 160 60% 50%;
+    --xp-strong: 160 70% 50%;
+    --danger: 0 70% 60%;
+    --info: 200 70% 60%;
+    --violet: 280 60% 65%;
+    --gold-tint: 43 85% 55% / 0.15;
+    --gold-tint-strong: 43 85% 20% / 0.4;
+    --gold-line: 43 85% 35%;
+    --btn-gradient: linear-gradient(135deg, hsl(43 85% 45%), hsl(43 85% 60%));
+    --btn-text: 220 20% 6%;
+    --overlay: 220 20% 6% / 0.8;
+    --card-hover-shadow: 0 8px 30px hsl(43 85% 20% / 0.2);
+
+    --font-sans: "Crimson Pro", Georgia, serif;
+    --font-serif: "Cinzel", serif;
+    --font-mono: "JetBrains Mono", monospace;
+    color-scheme: dark;
+  }
+
+  /* ══════════════ TEMA CHIARO — "pergamena e inchiostro" ══════════════
+     Tutti i colori di testo superano il contrasto WCAG AA (4.5:1). */
+  [data-theme="light"] {
+    --background: 40 33% 94%;
+    --foreground: 25 30% 12%;
+    --card: 42 40% 98%;
+    --card-foreground: 25 30% 12%;
+    --card-border: 35 22% 78%;
+    --muted: 38 25% 89%;
+    --muted-foreground: 25 15% 32%;
+    --primary: 32 80% 30%;
+    --primary-foreground: 40 60% 97%;
+    --border: 35 22% 76%;
+    --input: 42 40% 99%;
+    --destructive: 0 65% 40%;
+    --destructive-border: hsl(0, 55%, 62%);
+    --sidebar: 38 30% 90%;
+    --sidebar-border: 35 22% 78%;
+    --sidebar-foreground: 25 30% 12%;
+
+    --xp: 160 70% 24%;
+    --xp-strong: 160 65% 32%;
+    --danger: 0 65% 40%;
+    --info: 205 80% 34%;
+    --violet: 275 55% 40%;
+    --gold-tint: 32 80% 40% / 0.14;
+    --gold-tint-strong: 32 80% 40% / 0.16;
+    --gold-line: 32 70% 45%;
+    --btn-gradient: linear-gradient(135deg, hsl(32 80% 28%), hsl(32 75% 38%));
+    --btn-text: 40 60% 97%;
+    --overlay: 25 30% 12% / 0.55;
+    --card-hover-shadow: 0 8px 24px hsl(32 60% 30% / 0.16);
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; border-color: hsl(var(--border)); margin: 0; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  [data-theme="dark"] body {
+    background-image:
+      radial-gradient(ellipse at 20% 0%, hsl(280 40% 15% / 0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, hsl(43 60% 20% / 0.2) 0%, transparent 60%);
+  }
+  [data-theme="light"] body {
+    background-image:
+      radial-gradient(ellipse at 15% 0%, hsl(35 60% 82% / 0.45) 0%, transparent 55%),
+      radial-gradient(ellipse at 90% 100%, hsl(25 50% 80% / 0.35) 0%, transparent 55%);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    letter-spacing: 0.04em;
+    color: hsl(var(--primary));
+  }
+
+  /* Elementi interattivi: bersagli comodi e focus visibile */
+  button, [role="button"], select, input { font-family: inherit; }
+  button { -webkit-tap-highlight-color: transparent; }
+  :focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; border-radius: 0.375rem; }
+  input, select, textarea { font-size: 16px; } /* evita lo zoom automatico su iPhone */
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: hsl(var(--background)); }
+  ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 3px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+}
+
+@layer components {
+  /* ── Titolo dorato animato ── */
+  .gold-shimmer {
+    background: linear-gradient(90deg, hsl(43,85%,45%), hsl(43,95%,65%), hsl(43,85%,45%));
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s infinite;
+  }
+  [data-theme="light"] .gold-shimmer {
+    background-image: linear-gradient(90deg, hsl(28,85%,22%), hsl(36,80%,36%), hsl(28,85%,22%));
+    background-size: 200% 100%;
+  }
+  @keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
+
+  .xp-bar { background: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: 999px; overflow: hidden; }
+  .xp-bar-fill {
+    background: linear-gradient(90deg, hsl(160 60% 35%), hsl(160 70% 50%));
+    border-radius: 999px;
+    transition: width 1s ease;
+    height: 100%;
+  }
+
+  .rpg-card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--card-border));
+    border-radius: 0.5625rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  }
+  [data-theme="light"] .rpg-card { box-shadow: 0 1px 2px hsl(30 30% 30% / 0.08), 0 4px 14px hsl(30 30% 30% / 0.06); }
+  .rpg-card::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(135deg, hsl(var(--gold-tint)), transparent);
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  @media (hover: hover) {
+    .rpg-card:hover { border-color: hsl(var(--gold-line)); transform: translateY(-2px); box-shadow: var(--card-hover-shadow); }
+    .rpg-card:hover::before { opacity: 1; }
+  }
+
+  .level-badge {
+    font-family: var(--font-serif); font-weight: 700;
+    background: var(--btn-gradient);
+    color: hsl(var(--btn-text)); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 15px hsl(43 85% 40% / 0.5);
+  }
+  [data-theme="light"] .level-badge { box-shadow: 0 2px 8px hsl(32 60% 25% / 0.35); }
+
+  .fade-in { animation: fadeIn 0.5s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── Rarità achievement ── */
+  .rarity-common { color: hsl(var(--muted-foreground)); border-color: hsl(var(--border)); }
+  .rarity-rare { color: hsl(var(--info)); border-color: hsl(var(--info) / 0.6); }
+  .rarity-epic { color: hsl(var(--violet)); border-color: hsl(var(--violet) / 0.6); }
+  .rarity-legendary { color: hsl(var(--primary)); border-color: hsl(var(--gold-line)); animation: glow 2s ease-in-out infinite; }
+  @keyframes glow { 0%,100% { box-shadow: 0 0 8px hsl(43 85% 45% / 0.35); } 50% { box-shadow: 0 0 18px hsl(43 85% 55% / 0.6); } }
+  [data-theme="light"] .rarity-legendary { animation: none; }
+
+  /* ── Pulsanti ── */
+  .btn-gold {
+    background: var(--btn-gradient);
+    color: hsl(var(--btn-text));
+    border: none; cursor: pointer; font-weight: 700;
+    font-family: var(--font-serif);
+  }
+
+  /* ════════════ LAYOUT RESPONSIVE ════════════
+     Le pagine usavano griglie scritte inline, che il CSS non può
+     sovrascrivere: queste classi le sostituiscono. */
+  .page { padding: 1.5rem; max-width: 80rem; margin: 0 auto; }
+  .page-narrow { padding: 1.5rem; max-width: 40rem; margin: 0 auto; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  .grid-split { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem; }
+  .grid-split-rev { display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; }
+  .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: 0.75rem; }
+  .grid-classes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; }
+
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Navigazione: barra laterale su PC, barra inferiore su telefono */
+  .desktop-sidebar { display: flex; }
+  .mobile-topbar, .mobile-bottombar { display: none; }
+
+  /* Tablet */
+  @media (max-width: 1024px) {
+    .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-split, .grid-split-rev { grid-template-columns: 1fr; }
+    .grid-classes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  /* Telefono */
+  @media (max-width: 768px) {
+    .desktop-sidebar { display: none !important; }
+    .mobile-topbar { display: flex !important; }
+    .mobile-bottombar { display: flex !important; }
+    .mobile-content-padding { padding-top: 3.5rem; padding-bottom: calc(4.25rem + env(safe-area-inset-bottom)); }
+
+    .page, .page-narrow { padding: 1rem; }
+    .grid-2 { grid-template-columns: 1fr; gap: 1rem; }
+    .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+    .grid-4 { gap: 0.75rem; }
+    .grid-split, .grid-split-rev { gap: 1rem; }
+    .grid-classes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stack-mobile { flex-direction: column !important; align-items: stretch !important; }
+    .hide-mobile { display: none !important; }
+    h1 { font-size: 1.5rem !important; }
+    .rpg-card { border-radius: 0.75rem; }
+  }
+
+  /* Telefono piccolo */
+  @media (max-width: 400px) {
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-3.keep-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  /* Schermi molto larghi */
+  @media (min-width: 1500px) {
+    .page { max-width: 90rem; }
+  }
+}
